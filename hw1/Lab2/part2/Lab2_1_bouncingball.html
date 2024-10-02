@@ -15,69 +15,54 @@
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
 
-        class Ball {
-            constructor(x, y) {
-              this.x = x;
-              this.y = y;
-              this.dx = 2
-              this.dy = -2; 
-              this.radius = 10; 
-              this.color = '#ff0000';
-              this.radius_increment_rate = 5;
-              this.radius_decrement_rate = 5
-            }
+        let x = canvas.width / 2; 
+        let y = canvas.height / 2;
+        let dx = 2; 
+        let dy = -2; 
+        let radius = 10; 
+        let color = '#ff0000';
+        const radius_increment_rate = 5;
+        const radius_decrement_rate = 5;
 
-            drawBall() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height); 
-                ctx.beginPath();
-                ctx.arc(x, y, radius, 0, Math.PI * 2); 
-                ctx.fillStyle = color;
-                ctx.fill();
-                ctx.closePath();
-            }
-
-            updatePosition() {
-                x += dx;
-                y += dy;
-                
-                if (x + radius > canvas.width || x - radius < 0) {
-                    dx = -dx; 
-                    color = getRandomColor(); 
-                    radius -= radius_decrement_rate;
-                }
-                if (y + radius > canvas.height || y - radius < 0) {
-                    dy = -dy;
-                    
-                    dr = radius_increment_rate
-                    radius += dr;
-                    y += dr * dy
-                    x += dr * dx
-                }
-            }
-
-            get RandomColor() {
-                // Function to generate a random color (optional for color change on bounce)
-                const letters = '0123456789ABCDEF';
-                let color = '#';
-                for (let i = 0; i < 6; i++) {
-                    color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
-            }
-        
+        function drawBall() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2); 
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.closePath();
         }
 
+        function updatePosition() {
+            x += dx;
+            y += dy;
+            
+            if (x + radius > canvas.width || x - radius < 0) {
+                dx = -dx; 
+                color = getRandomColor(); 
+                radius -= radius_decrement_rate;
+            }
+            if (y + radius > canvas.height || y - radius < 0) {
+                dy = -dy;
+                
+                dr = radius_increment_rate
+                radius += dr;
+                y += dr * dy
+                x += dr * dx
+            }
+        }
 
-
-        const Balls = [
-            new Ball(canvas.width/2, canvas.height/2 + canvas.height/4),
-            new Ball(canvas.width/2 - canvas.width/4, canvas.height/2),
-            new Ball(canvas.width/2 + canvas.width/4, canvas.height/2)
-        ]
+        function getRandomColor() {
+            // Function to generate a random color (optional for color change on bounce)
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
 
         function animate() {
-
-
             drawBall();
             updatePosition();
             requestAnimationFrame(animate); // Schedule next animation frame
