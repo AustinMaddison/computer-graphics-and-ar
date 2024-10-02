@@ -42,7 +42,7 @@ function updatePosition() {
 }
 ```
 
-
+---
 ### Q2
 #### Explaination:
 
@@ -77,7 +77,94 @@ if (y + radius > canvas.height || y - radius < 0) {
     x += dr * dx
 } 
 ```
+---
+### Q3
+[bouncingball3.html](hw1\Lab2\part2\bouncingball3.html)
 
-### Q2
+---
+### Q4
 
+I first turn the ball related logic and variables to a Ball class.
+``` js
+class Ball {
+             class Ball {
+            constructor(x, y, dx, dy) {
+                this.x = x;
+                this.y = y;
+                this.dx = dx
+                this.dy = dy; 
+                this.radius = 10; 
+                this.color = '#ff0000';
+                this.radius_increment_rate = 5;
+                this.radius_decrement_rate = 5
+              }
+
+            drawBall() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); 
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            updatePosition() {
+                this.x += this.dx;
+                this.y += this.dy;
+                
+                if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+                    this.dx = -this.dx; 
+                    this.color = this.getRandomColor(); 
+                    this.radius -= this.radius_decrement_rate;
+                }
+                if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
+                    this.dy = -this.dy;
+                    
+                    let dr = this.radius_increment_rate
+                    this.radius += dr;
+                    this.y += dr * this.dy
+                    this.x += dr * this.dx
+                }
+            }
+
+            getRandomColor() {
+                // Function to generate a random color (optional for color change on bounce)
+                const letters = '0123456789ABCDEF';
+                let color = '#';
+                for (let i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            }
+
+            update() {
+                this.updatePosition();
+                this.drawBall();
+            }
+        
+        }
+```
+
+Notice that I added 
+1. `update()` to update and render the ball. 
+2. moved `ctx.clearRect(0, 0, canvas.width, canvas.height);` out because it would clear the buffer before rendering all balls.
+
+I then create an array of 3 Balls
+```js
+const Balls = [
+        new Ball(canvas.width/2, canvas.height/2, 2, 2),
+        new Ball(canvas.width/2, canvas.height/2, 2, -2),
+        new Ball(canvas.width/2, canvas.height/2, -2, 2),
+    ]
+```
+
+In the main loop I clear the buffer and then update each of the Balls in the array.
+
+```js
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); 
+    Balls.forEach(ball => ball.update());
+    requestAnimationFrame(animate); // Schedule next animation frame
+}
+```
+---
 
