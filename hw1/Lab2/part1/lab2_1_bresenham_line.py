@@ -16,7 +16,7 @@ def draw(u):
     
     def draw_bresenham(u, v):
         
-        print('u', u, 'v', v)
+        print('line:', 'u', u, 'v', v)
         x0, y0 = u
         x1, y1 = v
         
@@ -51,11 +51,9 @@ def draw(u):
             verts = verts[1:]
             
         draw_bresenham(verts[0], verts[1])
+        cv2.circle(img, verts[1], 3, POINT_COLOR, -1)
     
     cv2.circle(img, verts[0], 3, POINT_COLOR, -1)
-    cv2.circle(img, verts[1], 3, POINT_COLOR, -1)
-    
-
     
 
 def mouse_callback(event, x, y, flags, param):
