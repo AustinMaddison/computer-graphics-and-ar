@@ -44,6 +44,21 @@
             stroke: black;
             stroke-width: 5px;
         }
+
+        .day-tick {
+            fill: none; 
+            stroke: rgb(255, 0, 0);
+            stroke-linecap: round;
+            stroke-width: 2px;
+        }
+
+        .month-tick {
+            fill: none; 
+            stroke: rgb(0, 4, 255);
+            stroke-linecap: round;
+            stroke-width: 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -76,11 +91,51 @@
     </div>
 
 
+    <div>
+        <svg class="date-clock" viewBox="0 0 300 300">
+            <circle class="clock-face" cx="150" cy="150" r="130" />
+            <line class="hand month-hand" x1="150" y1="150" x2="150" y2="80" />
+            <line class="hand day-hand" x1="150" y1="150" x2="150" y2="50" />
+        </svg>
+        <span>Current Month and Day</span>
+    </div>
+
     <script>
         const labels = document.querySelectorAll('.labels');
         const hourHands = document.querySelectorAll('.hour-hand');
         const minuteHands = document.querySelectorAll('.minute-hand');
         const secondHands = document.querySelectorAll('.second-hand');
+
+        const dayHand = document.querySelector('.day-hand');
+        const monthHand = document.querySelector('.month-hand');
+
+
+        const dateClock = document.querySelector('.date-clock');
+        for (let i = 0; i < 31; i++) {
+            let node = document.createElementNS("http://www.w3.org/2000/svg", "line"); // Create SVG line element
+            node.classList.add('day-tick');
+            node.setAttribute('x1', `${20}`);
+            node.setAttribute('x2', `${30}`);
+            node.setAttribute('y1', `${150}`);
+            node.setAttribute('y2', `${150}`);                
+            node.setAttribute('transform', `rotate(${i * 360/31} 150 150)`);
+            dateClock.appendChild(node);
+
+        }
+
+        for (let i = 0; i < 12; i++) {
+            const node = document.createElementNS("http://www.w3.org/2000/svg", "line"); // Create SVG line element
+            node.classList.add('month-tick');
+            node.setAttribute('x1', `${20}`);
+            node.setAttribute('x2', `${40}`);
+            node.setAttribute('y1', `${150}`);
+            node.setAttribute('y2', `${150}`);                
+            node.setAttribute('transform', `rotate(${i * 360/12} 150 150)`);
+            dateClock.appendChild(node);
+        }
+
+        node = document.createElementNS("http://www.w3.org/2000/svg", "line"); // Create SVG line element
+
 
         class UtcTime {
             static getHours() { 
@@ -117,11 +172,15 @@
                 labels[i].textContent = utcTimezoneNames[i];
             }
 
+            const date = new Date();
+            const dayAngle = (date.getDay()) * 360/31; // 360 degrees / 60 seconds
+            const monthAngle = date.getMonth() * 360/12 ; // Account for seconds
+            // Set rotation transform for hands
+            dayHand.setAttribute('transform', `rotate(${dayAngle} 150 150)`);
+            monthHand.setAttribute('transform', `rotate(${monthAngle} 150 150)`);
 
             requestAnimationFrame(updateClock); // Schedule next animation frame
         }
-
-
 
         updateClock(); // Start the animation loop
     </script>
