@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Clock Animation</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        svg {
+            width: 300px;
+            height: 300px;
+        }
+
+        div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        span {
+            font-family: sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            font-size: large;
+            text-align: center;
+        }
+
+        .hand {
+            fill: none; 
+            stroke: black;
+            stroke-linecap: round;
+            stroke-width: 5px;
+        }
+
+        .clock-face {
+            fill: #eee;
+            stroke: black;
+            stroke-width: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <svg viewBox="0 0 300 300">
+            <circle class="clock-face" cx="150" cy="150" r="130" />
+            <line class="hand hour-hand" x1="150" y1="150" x2="150" y2="80" />
+            <line class="hand minute-hand" x1="150" y1="150" x2="150" y2="50" />
+            <line class="hand second-hand" x1="150" y1="150" x2="150" y2="30" />
+        </svg>
+        <span class="labels"></span>
+    </div>
+    <div>
+        <svg viewBox="0 0 300 300">
+            <circle class="clock-face" cx="150" cy="150" r="130" />
+            <line class="hand hour-hand" x1="150" y1="150" x2="150" y2="80" />
+            <line class="hand minute-hand" x1="150" y1="150" x2="150" y2="50" />
+            <line class="hand second-hand" x1="150" y1="150" x2="150" y2="30" />
+        </svg>
+        <span class="labels"></span>
+    </div>
+    <div>
+        <svg viewBox="0 0 300 300">
+            <circle class="clock-face" cx="150" cy="150" r="130" />
+            <line class="hand hour-hand" x1="150" y1="150" x2="150" y2="80" />
+            <line class="hand minute-hand" x1="150" y1="150" x2="150" y2="50" />
+            <line class="hand second-hand" x1="150" y1="150" x2="150" y2="30" />
+        </svg>
+        <span class="labels"></span>
+    </div>
+
+
+    <script>
+        const labels = document.querySelectorAll('.labels');
+        const hourHands = document.querySelectorAll('.hour-hand');
+        const minuteHands = document.querySelectorAll('.minute-hand');
+        const secondHands = document.querySelectorAll('.second-hand');
+
+        class UtcTime {
+            static getHours() { 
+                let now = new Date()
+                return now.getHours() + now.getTimezoneOffset() / 60; 
+            }
+
+            static getMinutes() { 
+                let now = new Date()
+                return now.getMinutes();
+            }
+
+            static getSeconds() { 
+                let now = new Date()
+                return now.getSeconds();
+            }
+        }
+
+        const utcTimezoneDelta = [7, 2, -4];
+        const utcTimezoneNames = ["Bangkok", "Cape-Town", "New York City"]
+
+        function updateClock() {
+
+            for (let i = 0; i < labels.length; i ++) {
+                const secondsAngle = UtcTime.getSeconds() * 6; // 360 degrees / 60 seconds
+                const minutesAngle = (UtcTime.getMinutes() + secondsAngle / 60) * 6; // Account for seconds
+                const hoursAngle = ((UtcTime.getHours() + utcTimezoneDelta[i]) % 12 + minutesAngle / 360) * 30; // 360 degrees / 12 hours
+            
+                // Set rotation transform for hands
+                secondHands[i].setAttribute('transform', `rotate(${secondsAngle} 150 150)`);
+                minuteHands[i].setAttribute('transform', `rotate(${minutesAngle} 150 150)`);
+                hourHands[i].setAttribute('transform', `rotate(${hoursAngle} 150 150)`);
+
+                labels[i].textContent = utcTimezoneNames[i];
+            }
+
+
+            requestAnimationFrame(updateClock); // Schedule next animation frame
+        }
+
+
+
+        updateClock(); // Start the animation loop
+    </script>
+</body>
+</html>

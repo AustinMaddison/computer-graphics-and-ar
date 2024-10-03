@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bouncing Box Animation</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+      margin: 0;
+    }
+    canvas {
+      background-color: #ffffff;
+      border: 1px solid #000000;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bouncingBoxCanvas" width="600" height="400"></canvas>
+  <script>
+    const canvas = document.getElementById('bouncingBoxCanvas');
+    const ctx = canvas.getContext('2d');
+
+    class Box {
+      constructor(x, y, dx, dy) {
+        this.x = x;
+        this.y = y;
+        this.width = 50;
+        this.height = 50;
+        this.dx = dx;
+        this.dy = dy;
+        this.angle = 0;
+        this.rotationSpeed = 0.05;
+        this.color = getRandomColor();
+        this.rotatedSoFar =  0;
+      }
+
+      drawBox() {
+        ctx.save();
+        ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+        ctx.rotate(this.angle);
+        ctx.translate(-this.width / 2, -this.height / 2);
+        ctx.fillStyle = this.color;
+        ctx.fillRect(0, 0, this.width, this.height);
+        ctx.restore();
+      }
+  
+      updateBox() {
+        this.x += this.dx;
+        this.y += this.dy;
+        this.angle += this.rotationSpeed;
+        this.rotatedSoFar += this.rotationSpeed;
+  
+        if (this.x + this.width > canvas.width || this.x < 0) {
+          this.dx = -this.dx;
+          this.resizeBox();
+        }
+        if (this.y + this.height > canvas.height || this.y < 0) {
+          this.dy = -this.dy;
+          this.resizeBox();
+        }
+        
+        if(this.rotatedSoFar >= 30/180 * Math.PI)
+        {
+          this.rotatedSoFar = 0
+          this.color = getRandomColor()
+        }
+      }
+
+      update() {
+        this.updateBox()
+        this.drawBox()
+      }
+
+      resizeBox() {
+        this.width = Math.random() * 50 + 30;
+        this.height = Math.random() * 50 + 30;
+      }
+    }
+
+    function getRandomColor() {
+      // Function to generate a random color (optional for color change on bounce)
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+    
+    const Boxes = [
+      new Box(canvas.width/2, canvas.height/2, 2, 2),
+      new Box(canvas.width/2, canvas.height/2, 2, -2),
+      new Box(canvas.width/2, canvas.height/2, -2, 2)
+    ]
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      Boxes.forEach((box) => box.update())
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+  </script>
+</body>
+</html>
