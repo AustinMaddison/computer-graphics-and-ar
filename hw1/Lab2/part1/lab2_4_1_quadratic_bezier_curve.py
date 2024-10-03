@@ -31,20 +31,18 @@ def draw(u):
         ps0, ps1, ps2 = ps[0:n-2], ps[1:n-1], ps[2:n]
         bs = []
         
-        for i,(p0, p1, p2) in enumerate(zip(ps0, ps1, ps2)):
-            if i % 2 == 1 : continue # only use p_i where i is odd to form tangents 
+        for i in np.arange(0, n-2, 2):
             for t in np.linspace(0, 1, ARC_SAMPLES):
-                a0 = (p1 - p0) * t + p0
-                a1 = (p2 - p1) * t + p1
+                a0 = (ps1[i] - ps0[i]) * t + ps0[i]
+                a1 = (ps2[i] - ps1[i]) * t + ps1[i]
                 bs += [(a1 - a0) * t + a0]
         
         return bs
-        
     
     def draw_bezier_curve(control_points):
 
         ps = calc_qudratic_curve(control_points)
-        
+        print(ps)
         ps0, ps1 = ps[0:len(ps)-1], ps[1:]
         [line(p0.astype(int), p1.astype(int)) for p0, p1 in zip(ps0, ps1)]
 
