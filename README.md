@@ -1,2 +1,3 @@
 ### Assignments
-- HW 1, [hw1\Lab2](Source Code)
+- HW 1, [Source Code](hw1/Lab2)
+  
