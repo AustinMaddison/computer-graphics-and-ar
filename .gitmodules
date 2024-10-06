@@ -1,3 +1,6 @@
 [submodule "resources"]
 	path = resources
 	url = https://github.com/KUGA-ICCS404-CG-AR/Home
+[submodule "computer-graphics-and-ar_hw-2"]
+	path = computer-graphics-and-ar_hw-2
+	url = https://github.com/AustinMaddison/computer-graphics-and-ar_hw-2.git
